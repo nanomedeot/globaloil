@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estaciones de servicio YPF y Puma en Neuquén y Río Negro | Global Oil</title>
+  <meta name="description" content="Encontrá la estación Global Oil más cercana: direcciones, teléfonos, servicios, medios de pago y cómo llegar a nuestras 12 estaciones YPF y Puma.">
+  <meta name="theme-color" content="#0e5ca7">
+  <link rel="canonical" href="https://www.globaloilsrl.com.ar/estaciones.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Estaciones de servicio YPF y Puma en Neuquén y Río Negro | Global Oil">
+  <meta property="og:description" content="Encontrá la estación Global Oil más cercana: direcciones, teléfonos, servicios, medios de pago y cómo llegar a nuestras 12 estaciones YPF y Puma.">
+  <meta property="og:image" content="https://www.globaloilsrl.com.ar/assets/img/hero-1.webp">
+  <meta property="og:locale" content="es_AR">
+  <link rel="icon" href="assets/img/brand/favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="assets/css/styles.css?v=2">
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+
+  <header class="header">
+    <div class="container">
+      <a class="header__logo" href="index.html" aria-label="Global Oil — inicio">
+        <img class="logo-white" src="assets/img/brand/global-oil-transparente-negativo.png" alt="Global Oil" width="700" height="157">
+        <img class="logo-color" src="assets/img/brand/global-oil-transparente.png" alt="Global Oil" width="700" height="157">
+      </a>
+      <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#menu"/></svg></button>
+      <nav class="nav" id="nav" aria-label="Principal">
+        <a href="index.html">Inicio</a>
+        <a href="nosotros.html">Nosotros</a>
+        <a href="estaciones.html" aria-current="page">Estaciones</a>
+        <a href="gastronomia.html">Gastronomía</a>
+        <a href="index.html#empresas">Empresas</a>
+        <a href="contacto.html">Contacto</a>
+        <a class="btn btn--accent btn--sm" href="estaciones.html"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#pin"/></svg>Encontrá tu estación</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero" style="padding-bottom:70px">
+      <img class="page-hero__bg" src="assets/img/hero-catriel.webp" alt="" width="1920" height="1272">
+      <div class="container">
+        <span class="eyebrow">Nuestras estaciones</span>
+        <h1>Te acompañamos en tu viaje</h1>
+        <p>12 estaciones YPF y Puma en Neuquén y Río Negro. Buscá por localidad, filtrá por servicio o encontrá la más cercana a vos.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:20px">
+      <div class="container finder">
+        <div>
+          <div class="filters">
+            <label class="search"><span class="sr-only">Buscar estación</span>
+              <svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#search"/></svg>
+              <input id="q" type="search" placeholder="Buscá por localidad, calle o nombre…" autocomplete="off">
+            </label>
+            <div class="chips" role="group" aria-label="Bandera y provincia">
+              <button class="chip chip--locate" id="near-me" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#locate"/></svg>Cerca mío</button>
+              <button class="chip" type="button" data-filter="bandera" data-value="YPF" aria-pressed="false">YPF</button>
+              <button class="chip" type="button" data-filter="bandera" data-value="PUMA" aria-pressed="false">Puma</button>
+              <button class="chip" type="button" data-filter="provincia" data-value="Neuquén" aria-pressed="false">Neuquén</button>
+              <button class="chip" type="button" data-filter="provincia" data-value="Río Negro" aria-pressed="false">Río Negro</button>
+            </div>
+            <div class="chips" role="group" aria-label="Servicios">
+              <button class="chip" type="button" data-filter="servicios" data-value="24h" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#clock"/></svg>24 h</button>
+              <button class="chip" type="button" data-filter="servicios" data-value="gnc" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#flame"/></svg>GNC</button>
+              <button class="chip" type="button" data-filter="servicios" data-value="comidas" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#utensils"/></svg>Comidas</button>
+              <button class="chip" type="button" data-filter="servicios" data-value="minimercado" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#bag"/></svg>Minimercado</button>
+              <button class="chip" type="button" data-filter="servicios" data-value="duchas" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#shower"/></svg>Duchas</button>
+              <button class="chip" type="button" data-filter="servicios" data-value="lubricentro" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#wrench"/></svg>Lubricentro</button>
+              <button class="chip" type="button" data-filter="servicios" data-value="bascula" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#truck"/></svg>Báscula</button>
+              <button class="chip" type="button" data-filter="servicios" data-value="extracash" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#cash"/></svg>Extra cash</button>
+            </div>
+            <div class="results-meta"><span id="results-count" aria-live="polite"></span><button id="reset" type="button">Limpiar filtros</button></div>
+          </div>
+          <div class="st-list" id="st-list"></div>
+        </div>
+        <div class="finder__map">
+          <div class="map-wrap"><div id="map-finder" class="map" role="region" aria-label="Mapa de estaciones"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="container">
+        <div class="cta reveal">
+          <div class="cta__body">
+            <span class="eyebrow" style="color:var(--verde)">¿No encontrás lo que buscás?</span>
+            <h2>Escribinos y te ayudamos</h2>
+            <p>Consultas sobre servicios, horarios o compras para tu empresa: te respondemos por WhatsApp o por correo.</p>
+            <div class="cta__actions">
+              <a class="btn btn--wa" data-wa href="#"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#whatsapp"/></svg>WhatsApp</a>
+              <a class="btn btn--ghost" href="contacto.html">Contacto</a>
+            </div>
+          </div>
+          <div class="cta__media"><img src="assets/img/surtidores.webp" alt="Picos de surtidor" loading="lazy"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <img class="footer__logo" src="assets/img/brand/global-oil-transparente-negativo.png" alt="Global Oil" width="700" height="157" loading="lazy">
+          <p>Global Oil SRL, empresa del Grupo Global. Estaciones de servicio YPF y Puma en Neuquén y Río Negro desde 2010.</p>
+        </div>
+        <div>
+          <h4>Sitio</h4>
+          <ul>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="estaciones.html">Estaciones</a></li>
+            <li><a href="gastronomia.html">Gastronomía</a></li>
+            <li><a href="index.html#empresas">Empresas</a></li>
+            <li><a href="contacto.html?motivo=Trabajá%20con%20nosotros">Trabajá con nosotros</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Administración</h4>
+          <ul>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#pin"/></svg>Ruta Nac. 151, Km 31<br>Campo Grande, Río Negro</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#phone"/></svg><a href="tel:+542994908115">0299 490-8115</a></li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#mail"/></svg><a href="mailto:administracion@globaloilsrl.com.ar">administracion@globaloilsrl.com.ar</a></li>
+          </ul>
+        </div>
+        <div class="footer__qr">
+          <h4>Data fiscal</h4>
+          <img src="assets/img/brand/qr.png" alt="Código QR de Data Fiscal AFIP" width="337" height="337" loading="lazy">
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© <span data-year>2026</span> Global Oil SRL. Todos los derechos reservados.</span>
+        <span>YPF y Puma Energy son marcas registradas de sus respectivos titulares.</span>
+      </div>
+    </div>
+  </footer>
+  <div class="footer__stripe"></div>
+
+  <a class="wa-float" data-wa href="#" aria-label="Escribinos por WhatsApp"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#whatsapp"/></svg></a>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="assets/js/data.js?v=2"></script>
+  <script src="assets/js/main.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contacto y Trabajá con nosotros | Global Oil</title>
+  <meta name="description" content="Contactá a Global Oil: consultas, ventas mayoristas de combustible a granel y búsquedas laborales.">
+  <meta name="theme-color" content="#0e5ca7">
+  <link rel="canonical" href="https://www.globaloilsrl.com.ar/contacto.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contacto y Trabajá con nosotros | Global Oil">
+  <meta property="og:description" content="Contactá a Global Oil: consultas, ventas mayoristas de combustible a granel y búsquedas laborales.">
+  <meta property="og:image" content="https://www.globaloilsrl.com.ar/assets/img/hero-1.webp">
+  <meta property="og:locale" content="es_AR">
+  <link rel="icon" href="assets/img/brand/favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="assets/css/styles.css?v=2">
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+
+  <header class="header">
+    <div class="container">
+      <a class="header__logo" href="index.html" aria-label="Global Oil — inicio">
+        <img class="logo-white" src="assets/img/brand/global-oil-transparente-negativo.png" alt="Global Oil" width="700" height="157">
+        <img class="logo-color" src="assets/img/brand/global-oil-transparente.png" alt="Global Oil" width="700" height="157">
+      </a>
+      <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#menu"/></svg></button>
+      <nav class="nav" id="nav" aria-label="Principal">
+        <a href="index.html">Inicio</a>
+        <a href="nosotros.html">Nosotros</a>
+        <a href="estaciones.html">Estaciones</a>
+        <a href="gastronomia.html">Gastronomía</a>
+        <a href="index.html#empresas">Empresas</a>
+        <a href="contacto.html" aria-current="page">Contacto</a>
+        <a class="btn btn--accent btn--sm" href="estaciones.html"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#pin"/></svg>Encontrá tu estación</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <img class="page-hero__bg" src="assets/img/puma-cielo.webp" alt="" width="1181" height="787">
+      <div class="container">
+        <span class="eyebrow">Contacto</span>
+        <h1>Hablemos</h1>
+        <p>Consultas, ventas mayoristas o tu CV para sumarte al equipo. Elegí el motivo y te respondemos a la brevedad.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container contact">
+        <div class="contact-cards reveal">
+          <div class="contact-card"><span class="ico"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#pin"/></svg></span><div><h3>Administración central</h3><p>Ruta Nacional 151, Km 31<br>Campo Grande, Río Negro</p></div></div>
+          <div class="contact-card"><span class="ico"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#phone"/></svg></span><div><h3>Teléfonos</h3><p><a href="tel:+542994908115">0299 490-8115</a> · <a href="tel:+542994761984">0299 476-1984</a></p></div></div>
+          <div class="contact-card"><span class="ico"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#mail"/></svg></span><div><h3>E-mail</h3><p><a href="mailto:administracion@globaloilsrl.com.ar">administracion@globaloilsrl.com.ar</a></p></div></div>
+          <div class="contact-card"><span class="ico"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#briefcase"/></svg></span><div><h3>Recursos humanos</h3><p><a href="mailto:novedadesrrhh@globaloilsrl.com.ar">novedadesrrhh@globaloilsrl.com.ar</a></p></div></div>
+          <a class="btn btn--wa" data-wa href="#" style="justify-self:start;margin-top:6px"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#whatsapp"/></svg>Escribinos por WhatsApp</a>
+        </div>
+
+        <form class="form reveal" data-delay="1" data-form data-to="administracion@globaloilsrl.com.ar" id="trabaja">
+          <div class="tabs" role="tablist" aria-label="Motivo de contacto">
+            <button type="button" role="tab" aria-selected="true" data-motivo="Consulta" data-to="administracion@globaloilsrl.com.ar">Consulta</button>
+            <button type="button" role="tab" aria-selected="false" data-motivo="Ventas mayoristas" data-to="administracion@globaloilsrl.com.ar">Empresas</button>
+            <button type="button" role="tab" aria-selected="false" data-motivo="Trabajá con nosotros" data-to="novedadesrrhh@globaloilsrl.com.ar">Trabajá con nosotros</button>
+          </div>
+          <input type="hidden" name="motivo" value="Consulta">
+          <div class="form-grid">
+            <div class="field"><label for="f-nombre">Nombre y apellido</label><input id="f-nombre" name="nombre" required autocomplete="name"></div>
+            <div class="field"><label for="f-email">E-mail</label><input id="f-email" name="email" type="email" required autocomplete="email"></div>
+            <div class="field"><label for="f-tel">Teléfono</label><input id="f-tel" name="telefono" type="tel" autocomplete="tel"></div>
+            <div class="field"><label for="f-loc">Localidad</label><input id="f-loc" name="localidad" autocomplete="address-level2"></div>
+            <div class="field field--full" data-only="Ventas mayoristas" hidden><label for="f-emp">Empresa y volumen estimado</label><input id="f-emp" name="empresa" placeholder="Ej.: Transporte XX — 20.000 l/mes de gasoil"></div>
+            <div class="field field--full" data-only="Trabajá con nosotros" hidden><label for="f-pos">Puesto o área de interés</label>
+              <select id="f-pos" name="puesto"><option value="">Elegí una opción</option><option>Playa / Playero</option><option>Tienda / Cafetería</option><option>Gastronomía / Parrilla</option><option>Lubricentro</option><option>Administración</option><option>Logística / Chofer</option><option>Otro</option></select></div>
+            <div class="field field--full"><label for="f-msg">Mensaje</label><textarea id="f-msg" name="mensaje" required></textarea></div>
+          </div>
+          <button class="btn btn--primary" type="submit" style="margin-top:20px"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#send"/></svg>Enviar</button>
+          <p class="form-note" data-only="Trabajá con nosotros" hidden>Al enviar se abrirá tu correo: no te olvides de adjuntar tu CV.</p>
+          <div class="form-ok" role="status"></div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section section--alt" style="padding-top:0;background:linear-gradient(#fff 0 120px, var(--fondo-alt) 120px)">
+      <div class="container">
+        <div class="map-wrap reveal"><div id="map-home" class="map" style="height:440px" role="region" aria-label="Mapa de estaciones"></div>
+          <button class="btn btn--primary btn--sm map-locate" id="locate-home" type="button"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#locate"/></svg>Usar mi ubicación</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <img class="footer__logo" src="assets/img/brand/global-oil-transparente-negativo.png" alt="Global Oil" width="700" height="157" loading="lazy">
+          <p>Global Oil SRL, empresa del Grupo Global. Estaciones de servicio YPF y Puma en Neuquén y Río Negro desde 2010.</p>
+        </div>
+        <div>
+          <h4>Sitio</h4>
+          <ul>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="estaciones.html">Estaciones</a></li>
+            <li><a href="gastronomia.html">Gastronomía</a></li>
+            <li><a href="index.html#empresas">Empresas</a></li>
+            <li><a href="contacto.html?motivo=Trabajá%20con%20nosotros">Trabajá con nosotros</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Administración</h4>
+          <ul>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#pin"/></svg>Ruta Nac. 151, Km 31<br>Campo Grande, Río Negro</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#phone"/></svg><a href="tel:+542994908115">0299 490-8115</a></li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#mail"/></svg><a href="mailto:administracion@globaloilsrl.com.ar">administracion@globaloilsrl.com.ar</a></li>
+          </ul>
+        </div>
+        <div class="footer__qr">
+          <h4>Data fiscal</h4>
+          <img src="assets/img/brand/qr.png" alt="Código QR de Data Fiscal AFIP" width="337" height="337" loading="lazy">
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© <span data-year>2026</span> Global Oil SRL. Todos los derechos reservados.</span>
+        <span>YPF y Puma Energy son marcas registradas de sus respectivos titulares.</span>
+      </div>
+    </div>
+  </footer>
+  <div class="footer__stripe"></div>
+
+  <a class="wa-float" data-wa href="#" aria-label="Escribinos por WhatsApp"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#whatsapp"/></svg></a>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="assets/js/data.js?v=2"></script>
+  <script src="assets/js/main.js?v=2"></script>
+</body>
+</html>
