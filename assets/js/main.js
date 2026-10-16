@@ -151,7 +151,7 @@
       '<p>' + esc(st.direccion) + '<br>' + esc(st.localidad) + ', ' + esc(st.provincia) + '</p>' +
       '<div class="pop__actions"><a class="go" href="' + directionsHref(st) + '" target="_blank" rel="noopener">' + icon('navigation') + 'Cómo llegar</a>' +
       (tel ? '<a href="' + telHref(tel.numero) + '">' + icon('phone') + 'Llamar</a>' : '') +
-      '<a href="estaciones.html#' + st.id + '">Ver más</a></div></div></div>';
+      '<a href="estaciones.html#' + st.id + '" data-open="' + st.id + '">' + icon('camera') + 'Ver ficha y fotos</a></div></div></div>';
   }
   function createMap(el, stations) {
     if (!window.L || !el) return null;
@@ -207,6 +207,126 @@
     });
   }
 
+
+  /* ---------- Ficha de estación con galería ---------- */
+  function findStation(id) {
+    return (window.ESTACIONES || []).filter(function (s) { return s.id === id; })[0];
+  }
+  var sheet, sheetState = { st: null, i: 0, fotos: [] };
+  function galleryFor(st) {
+    var g = (window.GALERIAS && window.GALERIAS[st.id]) || [];
+    if (!g.length) return [{ src: st.img, thumb: st.img, w: 400, h: 400 }];
+    return g.map(function (wh, i) {
+      var n = (i < 9 ? '0' : '') + (i + 1), base = 'assets/img/galeria/' + st.id + '/' + n;
+      return { src: base + '.webp', thumb: base + '-t.webp', w: wh[0], h: wh[1] };
+    });
+  }
+  function buildSheet() {
+    sheet = document.createElement('dialog');
+    sheet.className = 'sheet';
+    sheet.setAttribute('aria-labelledby', 'sheet-title');
+    sheet.innerHTML =
+      '<button type="button" class="sheet__close" aria-label="Cerrar">' + icon('x') + '</button>' +
+      '<div class="sheet__gallery">' +
+        '<div class="sheet__stage">' +
+          '<img class="sheet__photo" alt="">' +
+          '<button type="button" class="sheet__nav sheet__nav--prev" aria-label="Foto anterior">' + icon('chevron-left') + '</button>' +
+          '<button type="button" class="sheet__nav sheet__nav--next" aria-label="Foto siguiente">' + icon('chevron-right') + '</button>' +
+          '<button type="button" class="sheet__full" aria-label="Ver en pantalla completa">' + icon('expand') + '</button>' +
+          '<span class="sheet__count" aria-live="polite"></span>' +
+        '</div>' +
+        '<div class="sheet__thumbs" role="list"></div>' +
+      '</div>' +
+      '<div class="sheet__info"></div>';
+    document.body.appendChild(sheet);
+    var stage = $('.sheet__stage', sheet);
+    $('.sheet__close', sheet).addEventListener('click', function () { sheet.close(); });
+    $('.sheet__nav--prev', sheet).addEventListener('click', function () { showPhoto(sheetState.i - 1); });
+    $('.sheet__nav--next', sheet).addEventListener('click', function () { showPhoto(sheetState.i + 1); });
+    $('.sheet__full', sheet).addEventListener('click', function () {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (stage.requestFullscreen) stage.requestFullscreen();
+    });
+    sheet.addEventListener('click', function (e) { if (e.target === sheet) sheet.close(); });
+    sheet.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') showPhoto(sheetState.i - 1);
+      if (e.key === 'ArrowRight') showPhoto(sheetState.i + 1);
+    });
+    var x0 = null;
+    stage.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    stage.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 40) showPhoto(sheetState.i + (dx < 0 ? 1 : -1));
+    });
+    sheet.addEventListener('close', function () {
+      document.body.classList.remove('sheet-open');
+      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    });
+  }
+  function showPhoto(i) {
+    var f = sheetState.fotos, n = f.length;
+    sheetState.i = (i + n) % n;
+    var p = f[sheetState.i], img = $('.sheet__photo', sheet);
+    img.src = p.src;
+    img.alt = sheetState.st.nombre + ' — foto ' + (sheetState.i + 1) + ' de ' + n;
+    $('.sheet__count', sheet).textContent = (sheetState.i + 1) + ' / ' + n;
+    $$('.sheet__thumbs button', sheet).forEach(function (b, j) {
+      var on = j === sheetState.i;
+      b.setAttribute('aria-current', on);
+      if (on) { var strip = b.parentNode; strip.scrollTo({ left: b.offsetLeft - (strip.clientWidth - b.offsetWidth) / 2, behavior: 'smooth' }); }
+    });
+    [1, -1].forEach(function (d) { var q = f[(sheetState.i + d + n) % n]; if (q) (new Image()).src = q.src; });
+  }
+  function openSheet(id) {
+    var st = findStation(id);
+    if (!st) return;
+    if (!sheet) buildSheet();
+    var SV = window.SERVICIOS || {};
+    sheetState = { st: st, i: 0, fotos: galleryFor(st) };
+    var single = sheetState.fotos.length < 2;
+    sheet.classList.toggle('sheet--single', single);
+    $('.sheet__thumbs', sheet).innerHTML = single ? '' : sheetState.fotos.map(function (f, i) {
+      return '<button type="button" role="listitem" aria-label="Foto ' + (i + 1) + '"><img src="' + f.thumb + '" alt="" loading="lazy"></button>';
+    }).join('');
+    $$('.sheet__thumbs button', sheet).forEach(function (b, i) { b.addEventListener('click', function () { showPhoto(i); }); });
+    var phones = st.telefonos.map(function (t) {
+      return '<a class="btn btn--outline btn--sm" href="' + telHref(t.numero) + '">' + icon('phone') + esc(t.numero) + '</a>';
+    }).join('');
+    var mails = st.emails.map(function (m) {
+      return '<a class="btn btn--outline btn--sm" href="mailto:' + m + '">' + icon('mail') + esc(m) + '</a>';
+    }).join('');
+    $('.sheet__info', sheet).innerHTML =
+      '<div class="sheet__flags">' + flagHtml(st) + (st.sede ? '<span class="flag flag--sede">Administración central</span>' : '') + '</div>' +
+      '<h2 id="sheet-title">' + esc(st.nombre) + '</h2>' +
+      '<p class="sheet__loc">' + icon('pin') + '<span>' + esc(st.direccion) + '<br>' + esc(st.localidad) + ', ' + esc(st.provincia) + '</span></p>' +
+      '<div class="sheet__actions"><a class="btn btn--primary btn--sm" href="' + directionsHref(st) + '" target="_blank" rel="noopener">' + icon('navigation') + 'Cómo llegar</a>' +
+      (window.__showOnMap ? '<button type="button" class="btn btn--outline btn--sm" data-map="' + st.id + '">' + icon('pin') + 'Ver en el mapa</button>' : '') + '</div>' +
+      ((phones || mails) ? '<h3>Contacto</h3><div class="sheet__actions">' + phones + mails + '</div>' : '') +
+      '<h3>Servicios</h3><ul class="sheet__svc">' + st.servicios.map(function (k) {
+        return SV[k] ? '<li>' + icon(SV[k].icon) + esc(SV[k].label) + '</li>' : '';
+      }).join('') + '</ul>' +
+      '<h3>La estación</h3><p>' + esc(st.detalle) + '</p>' +
+      '<h3>Medios de pago</h3><p>' + esc(st.pagos) + '</p>' +
+      (st.promo ? '<div class="promo"><strong>Promociones:</strong> ' + esc(st.promo) + '</div>' : '');
+    var mb = $('[data-map]', sheet);
+    if (mb) mb.addEventListener('click', function () { sheet.close(); window.__showOnMap(st.id); });
+    showPhoto(0);
+    if (!sheet.open) sheet.showModal();
+    document.body.classList.add('sheet-open');
+    $('.sheet__info', sheet).scrollTop = 0;
+    sheet.scrollTop = 0;
+    if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+  }
+  if (window.GALERIAS) {
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('[data-open]');
+      if (!a || !findStation(a.dataset.open)) return;
+      e.preventDefault();
+      openSheet(a.dataset.open);
+    });
+  }
+
   /* ---------- Buscador de estaciones ---------- */
   var listEl = $('#st-list');
   if (listEl && window.ESTACIONES) {
@@ -218,13 +338,13 @@
       var phones = st.telefonos.map(function (t) {
         return '<a class="btn btn--outline btn--sm" href="' + telHref(t.numero) + '">' + icon('phone') + esc(t.numero) + '</a>';
       }).join('');
-      var mails = st.emails.map(function (m) {
-        return '<a href="mailto:' + m + '">' + esc(m) + '</a>';
-      }).join('<br>');
+      var nFotos = (window.GALERIAS && window.GALERIAS[st.id] || []).length;
       return '<article class="st-card" id="' + st.id + '" data-id="' + st.id + '">' +
-        '<div class="st-card__img"><img src="' + st.img + '" alt="Estación ' + esc(st.nombre) + '" loading="lazy" width="400" height="400">' + flagHtml(st) + '</div>' +
+        '<button type="button" class="st-card__img" data-open="' + st.id + '" aria-label="Ver ficha y fotos de ' + esc(st.nombre) + '">' +
+        '<img src="' + st.img + '" alt="" loading="lazy" width="400" height="400">' + flagHtml(st) +
+        (nFotos ? '<span class="photo-count">' + icon('camera') + nFotos + (nFotos === 1 ? ' foto' : ' fotos') + '</span>' : '') + '</button>' +
         '<div class="st-card__body">' +
-        '<div class="st-card__top"><div><h3>' + esc(st.nombre) + '</h3><p class="loc">' + esc(st.localidad) + ', ' + esc(st.provincia) +
+        '<div class="st-card__top"><div><h3><a href="#' + st.id + '" data-open="' + st.id + '">' + esc(st.nombre) + '</a></h3><p class="loc">' + esc(st.localidad) + ', ' + esc(st.provincia) +
         (st.sede ? ' · <strong style="color:var(--azul)">Administración central</strong>' : '') + '</p></div>' +
         (km != null ? '<span class="dist">' + fmtKm(km) + '</span>' : '') + '</div>' +
         '<div class="addr">' + icon('pin') + '<span>' + esc(st.direccion) + '</span></div>' +
@@ -233,13 +353,8 @@
         }).join('') + '</div>' +
         '<div class="st-card__actions"><a class="btn btn--primary btn--sm" href="' + directionsHref(st) + '" target="_blank" rel="noopener">' + icon('navigation') + 'Cómo llegar</a>' +
         phones + '</div>' +
-        '<details><summary>Servicios y medios de pago ' + icon('chevron-down') + '</summary>' +
-        '<div class="svc-list">' + st.servicios.map(function (k) { return SV[k] ? '<span>' + esc(SV[k].label) + '</span>' : ''; }).join('') + '</div>' +
-        '<p>' + esc(st.detalle) + '</p>' +
-        '<dl><dt>Medios de pago</dt><dd>' + esc(st.pagos) + '</dd>' +
-        (mails ? '<dt>E-mail</dt><dd>' + mails + '</dd>' : '') + '</dl>' +
-        (st.promo ? '<div class="promo"><strong>Promociones:</strong> ' + esc(st.promo) + '</div>' : '') +
-        '</details></div></article>';
+        '<button type="button" class="st-card__more" data-open="' + st.id + '">' + icon('camera') + 'Ver ficha completa y fotos' + icon('arrow-right') + '</button>' +
+        '</div></article>';
     }
 
     function render() {
@@ -274,10 +389,16 @@
       }
       $$('.st-card', listEl).forEach(function (card) {
         card.addEventListener('mouseenter', function () { highlight(card.dataset.id, false); });
-        card.querySelector('.st-card__img').addEventListener('click', function () { highlight(card.dataset.id, true); });
       });
     }
 
+    window.__showOnMap = function (id) {
+      var card = document.getElementById(id);
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      highlight(id, false);
+      var m = ctx && ctx.markers[id];
+      if (m) ctx.map.setView(m.getLatLng(), 15);
+    };
     function highlight(id, open) {
       $$('.st-card.is-active', listEl).forEach(function (c) { c.classList.remove('is-active'); });
       var card = document.getElementById(id);
@@ -290,10 +411,8 @@
     }
 
     if (ctx) Object.keys(ctx.markers).forEach(function (id) {
-      ctx.markers[id].on('click', function () {
-        var card = document.getElementById(id);
-        if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); highlight(id, false); }
-      });
+      ctx.markers[id].off('click').unbindPopup();
+      ctx.markers[id].on('click', function () { highlight(id, false); openSheet(id); });
     });
 
     $('#q').addEventListener('input', function (e) { state.q = e.target.value; render(); });
@@ -340,11 +459,10 @@
     function focusHash() {
       var id = location.hash.slice(1);
       if (!id) return;
+      if (!findStation(id)) return;
       if (!document.getElementById(id)) $('#reset').click();
-      setTimeout(function () {
-        var card = document.getElementById(id);
-        if (card) { card.scrollIntoView({ block: 'start' }); highlight(id, true); card.querySelector('details').open = true; }
-      }, 300);
+      highlight(id, false);
+      openSheet(id);
     }
     focusHash();
     window.addEventListener('hashchange', focusHash);
