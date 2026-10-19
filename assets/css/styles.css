@@ -95,6 +95,7 @@ p { margin: 0 0 1em; }
 .btn--wa { background: #25d366; color: #fff; }
 .btn--wa:hover { background: #1fb457; color: #fff; }
 .btn--sm { padding: 10px 16px; font-size: .85rem; }
+@media (max-width: 420px) { .btn { white-space: normal; text-align: center; } }
 .link-arrow { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
 .link-arrow .icon { transition: transform .25s var(--ease); }
 .link-arrow:hover .icon { transform: translateX(4px); }
@@ -424,12 +425,13 @@ p { margin: 0 0 1em; }
 /* ==========================================================================
    Contacto / formularios
    ========================================================================== */
-.contact { display: grid; grid-template-columns: .85fr 1.15fr; gap: 40px; align-items: start; }
+.contact { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 40px; align-items: start; }
 .contact-cards { display: grid; gap: 14px; }
 .contact-card { display: flex; gap: 16px; padding: 22px; background: #fff; border: 1px solid var(--linea); border-radius: var(--radio); }
 .contact-card .ico { width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0; display: grid; place-items: center; background: var(--celeste-100); color: var(--azul); }
 .contact-card h3 { font-size: 1rem; margin: 0 0 2px; }
-.contact-card p { margin: 0; font-size: .92rem; }
+.contact-card p { margin: 0; font-size: .92rem; overflow-wrap: anywhere; }
+.contact-card > div { min-width: 0; }
 .form { background: #fff; border: 1px solid var(--linea); border-radius: calc(var(--radio) + 4px); padding: clamp(24px, 4vw, 44px); box-shadow: var(--sombra); }
 .tabs { display: flex; gap: 6px; padding: 5px; background: var(--fondo-alt); border-radius: 999px; margin-bottom: 26px; flex-wrap: wrap; }
 .tabs button { flex: 1; min-width: max-content; padding: 10px 16px; border: 0; border-radius: 999px; background: none; font: 600 .88rem 'Poppins', sans-serif; color: var(--texto-suave); cursor: pointer; transition: all .2s; }
@@ -444,7 +446,7 @@ p { margin: 0 0 1em; }
 .form-note { font-size: .82rem; color: var(--texto-suave); margin: 14px 0 0; }
 .form-ok { display: none; padding: 14px 18px; border-radius: 12px; background: #eaf7ee; color: #1d6b35; font-weight: 500; margin-top: 16px; }
 .form-ok.is-visible { display: block; }
-@media (max-width: 900px) { .contact { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .contact { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
 
 /* ==========================================================================
@@ -547,6 +549,7 @@ body.sheet-open { overflow: hidden; }
 .sheet__loc { display: flex; gap: 10px; color: var(--tinta); }
 .sheet__loc .icon { color: var(--azul); margin-top: 3px; }
 .sheet__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.sheet__actions .btn { white-space: normal; overflow-wrap: anywhere; text-align: left; }
 .sheet__actions + h3 { margin-top: 24px; }
 h3 + .sheet__actions { margin-top: 0; }
 .sheet__svc { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

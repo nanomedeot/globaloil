@@ -1,0 +1,38 @@
+# Global Oil — configuración para servidores Apache (Hostinger)
+
+# No mostrar el listado de archivos de las carpetas
+Options -Indexes
+
+# Página de inicio
+DirectoryIndex index.html
+
+# Compresión de texto
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/x-javascript text/javascript image/svg+xml application/json
+</IfModule>
+
+# Tipos de archivo
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+</IfModule>
+
+# Caché del navegador. CSS y JS se versionan con ?v=N en los HTML:
+# al cambiarlos, subir ese número para que los visitantes vean la versión nueva.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 day"
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType application/x-javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+</IfModule>
+
+# No publicar archivos internos
+<FilesMatch "^\.|\.(md|zip|sh)$">
+  Require all denied
+</FilesMatch>
