@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-  <link rel="stylesheet" href="assets/css/styles.css?v=9">
+  <link rel="stylesheet" href="assets/css/styles.css?v=10">
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -73,7 +73,7 @@
           <a class="btn btn--wa" data-wa href="#" style="justify-self:start;margin-top:6px"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#whatsapp"/></svg>Escribinos por WhatsApp</a>
         </div>
 
-        <form class="form reveal" data-delay="1" data-form data-to="administracion@globaloilsrl.com.ar" id="trabaja">
+        <form class="form reveal" data-delay="1" data-form data-endpoint="contacto.php" data-to="administracion@globaloilsrl.com.ar" id="trabaja" method="post" action="contacto.php" enctype="multipart/form-data">
           <div class="tabs" role="tablist" aria-label="Motivo de contacto">
             <button type="button" role="tab" aria-selected="true" data-motivo="Consulta" data-to="administracion@globaloilsrl.com.ar">Consulta</button>
             <button type="button" role="tab" aria-selected="false" data-motivo="Ventas mayoristas" data-to="administracion@globaloilsrl.com.ar">Empresas</button>
@@ -88,10 +88,11 @@
             <div class="field field--full" data-only="Ventas mayoristas" hidden><label for="f-emp">Empresa y volumen estimado</label><input id="f-emp" name="empresa" placeholder="Ej.: Transporte XX — 20.000 l/mes de gasoil"></div>
             <div class="field field--full" data-only="Trabajá con nosotros" hidden><label for="f-pos">Puesto o área de interés</label>
               <select id="f-pos" name="puesto"><option value="">Elegí una opción</option><option>Playa / Playero</option><option>Tienda / Cafetería</option><option>Gastronomía / Parrilla</option><option>Lubricentro</option><option>Administración</option><option>Logística / Chofer</option><option>Otro</option></select></div>
+            <div class="field field--full" data-only="Trabajá con nosotros" hidden><label for="f-cv">Tu CV (PDF o Word, hasta 5 MB)</label><input id="f-cv" name="cv" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></div>
             <div class="field field--full"><label for="f-msg">Mensaje</label><textarea id="f-msg" name="mensaje" required></textarea></div>
           </div>
-          <button class="btn btn--primary" type="submit" style="margin-top:20px"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#send"/></svg>Enviar</button>
-          <p class="form-note" data-only="Trabajá con nosotros" hidden>Al enviar se abrirá tu correo: no te olvides de adjuntar tu CV.</p>
+          <button class="btn btn--primary" type="submit" style="margin-top:20px" data-submit><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#send"/></svg>Enviar</button>
+          <div class="hp" aria-hidden="true"><label>No completar este campo <input name="sitio_web" tabindex="-1" autocomplete="off"></label></div>
           <div class="form-ok" role="status"></div>
         </form>
       </div>
@@ -111,6 +112,10 @@
         <div>
           <img class="footer__logo" src="assets/img/brand/global-oil-transparente-negativo.png" alt="Global Oil" width="700" height="157" loading="lazy">
           <p>Global Oil SRL, empresa del Grupo Global. Estaciones de servicio YPF y Puma en Neuquén y Río Negro desde 2010.</p>
+          <div class="social">
+            <a href="https://www.instagram.com/somosglobaloil" target="_blank" rel="noopener" aria-label="Instagram de Global Oil"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#instagram"/></svg></a>
+            <a href="https://www.facebook.com/somosglobaloil" target="_blank" rel="noopener" aria-label="Facebook de Global Oil"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#facebook"/></svg></a>
+          </div>
         </div>
         <div>
           <h4>Sitio</h4>
@@ -146,7 +151,7 @@
   <a class="wa-float" data-wa href="#" aria-label="Escribinos por WhatsApp"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#whatsapp"/></svg></a>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="assets/js/data.js?v=9"></script>
-  <script src="assets/js/main.js?v=9"></script>
+  <script src="assets/js/data.js?v=10"></script>
+  <script src="assets/js/main.js?v=10"></script>
 </body>
 </html>

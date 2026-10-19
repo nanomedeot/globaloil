@@ -479,42 +479,69 @@
   }
 
   /* ---------- Formularios ----------
-   * Sin servidor: se abre el correo del usuario con el mensaje armado.
-   * Si en el futuro hay un endpoint (PHP, Formspree, etc.), poné su URL
-   * en el atributo data-endpoint del <form> y se enviará por POST.
+   * Con data-endpoint (contacto.php) se envía por POST y el servidor manda el mail.
+   * Sin endpoint, o si el servidor no responde, se ofrece abrir el correo del visitante.
    */
   $$('form[data-form]').forEach(function (form) {
     var tabs = $$('.tabs button', form);
-    tabs.forEach(function (t) {
-      t.addEventListener('click', function () {
-        tabs.forEach(function (o) { o.setAttribute('aria-selected', o === t); });
-        form.dataset.to = t.dataset.to;
-        form.elements.motivo.value = t.dataset.motivo;
-        $$('[data-only]', form).forEach(function (f) { f.hidden = f.dataset.only !== t.dataset.motivo; });
-      });
-    });
+    function selectTab(t) {
+      tabs.forEach(function (o) { o.setAttribute('aria-selected', o === t); });
+      form.dataset.to = t.dataset.to;
+      form.elements.motivo.value = t.dataset.motivo;
+      $$('[data-only]', form).forEach(function (f) { f.hidden = f.dataset.only !== t.dataset.motivo; });
+    }
+    tabs.forEach(function (t) { t.addEventListener('click', function () { selectTab(t); }); });
     var initial = new URLSearchParams(location.search).get('motivo') || (location.hash === '#trabaja' ? 'Trabajá con nosotros' : '');
-    if (initial) tabs.forEach(function (t) { if (t.dataset.motivo === initial) t.click(); });
+    if (initial) tabs.forEach(function (t) { if (t.dataset.motivo === initial) selectTab(t); });
+
+    var msg = $('.form-ok', form), btn = $('[data-submit]', form), btnHtml = btn ? btn.innerHTML : '';
+    function mailtoHref(data) {
+      var lines = [];
+      data.forEach(function (v, k) { if (v && typeof v === 'string' && ['motivo', 'sitio_web'].indexOf(k) < 0) lines.push(k.charAt(0).toUpperCase() + k.slice(1) + ': ' + v); });
+      var motivo = data.get('motivo') || 'Consulta';
+      return 'mailto:' + (form.dataset.to || cfg.email) + '?subject=' + encodeURIComponent(motivo + ' — web Global Oil') +
+        '&body=' + encodeURIComponent(lines.join('\n') + (motivo === 'Trabajá con nosotros' ? '\n\n(Adjuntá tu CV a este correo)' : ''));
+    }
+    function show(text, isError, data) {
+      msg.classList.toggle('form-ok--error', !!isError);
+      msg.innerHTML = esc(text) + (isError && data ? '<br><a href="' + esc(mailtoHref(data)) + '">Enviarlo desde tu correo</a> · <a data-wa href="https://wa.me/' + cfg.whatsapp + '" target="_blank" rel="noopener">WhatsApp</a>' : '');
+      msg.classList.add('is-visible');
+    }
+    function busy(on) {
+      if (!btn) return;
+      btn.disabled = on;
+      btn.innerHTML = on ? 'Enviando…' : btnHtml;
+    }
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var data = new FormData(form);
-      var ok = $('.form-ok', form);
-      track('enviar_formulario', { motivo: data.get('motivo') || 'Consulta' });
-      if (form.dataset.endpoint) {
-        fetch(form.dataset.endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
-          .then(function (r) { if (!r.ok) throw r; ok.textContent = '¡Gracias! Recibimos tu mensaje y te responderemos a la brevedad.'; ok.classList.add('is-visible'); form.reset(); })
-          .catch(function () { alert('No pudimos enviar el mensaje. Probá de nuevo o escribinos por WhatsApp.'); });
+      var motivo = data.get('motivo') || 'Consulta';
+      var cv = form.elements.cv && form.elements.cv.files[0];
+      if (cv && motivo === 'Trabajá con nosotros' && cv.size > 5 * 1024 * 1024) { show('El CV supera los 5 MB.', true); return; }
+      if (!form.dataset.endpoint) {
+        location.href = mailtoHref(data);
+        show('Se abrió tu aplicación de correo con el mensaje listo para enviar.');
         return;
       }
-      var lines = [];
-      data.forEach(function (v, k) { if (v && k !== 'motivo' && typeof v === 'string') lines.push(k.charAt(0).toUpperCase() + k.slice(1) + ': ' + v); });
-      var motivo = data.get('motivo') || 'Consulta';
-      var to = form.dataset.to || cfg.email;
-      var body = lines.join('\n') + (motivo === 'Trabajá con nosotros' ? '\n\n(Adjuntá tu CV a este correo)' : '');
-      location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(motivo + ' — web Global Oil') + '&body=' + encodeURIComponent(body);
-      ok.textContent = 'Se abrió tu aplicación de correo con el mensaje listo para enviar.';
-      ok.classList.add('is-visible');
+      busy(true);
+      fetch(form.dataset.endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
+        .then(function (r) {
+          return r.json().catch(function () { return { ok: false }; });
+        })
+        .then(function (res) {
+          busy(false);
+          if (!res.ok) throw new Error(res.error || '');
+          track('enviar_formulario', { motivo: motivo });
+          var active = tabs.filter(function (t) { return t.getAttribute('aria-selected') === 'true'; })[0];
+          form.reset();
+          if (active) selectTab(active);
+          show(motivo === 'Trabajá con nosotros' ? '¡Gracias! Recibimos tu postulación.' : '¡Gracias! Recibimos tu mensaje y te responderemos a la brevedad.');
+        })
+        .catch(function (err) {
+          busy(false);
+          show((err && err.message) || 'No pudimos enviar el mensaje.', true, data);
+        });
     });
   });
 
