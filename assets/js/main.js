@@ -15,6 +15,13 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+  /* Eventos para Google Tag Manager (dataLayer). */
+  window.dataLayer = window.dataLayer || [];
+  function track(event, params) {
+    var o = { event: event };
+    for (var k in params) if (params[k] != null) o[k] = params[k];
+    window.dataLayer.push(o);
+  }
   function telHref(num) {
     var d = num.replace(/\D/g, '').replace(/^0/, '');
     return 'tel:+54' + d;
@@ -200,6 +207,7 @@
     if (lb && homeCtx) lb.addEventListener('click', function () {
       locate(homeCtx, function (pos) {
         var n = nearest(pos)[0];
+        track('buscar_cercana', { estacion_id: n.st.id });
         homeCtx.map.fitBounds(L.latLngBounds([[pos.lat, pos.lng], [n.st.lat, n.st.lng]]), { padding: [80, 80], maxZoom: 14 });
         homeCtx.markers[n.st.id].openPopup();
         lb.innerHTML = icon('locate') + 'La más cercana: ' + esc(n.st.nombre) + ' (' + fmtKm(n.km) + ')';
@@ -317,6 +325,7 @@
     $('.sheet__info', sheet).scrollTop = 0;
     sheet.scrollTop = 0;
     if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+    track('ver_estacion', { estacion_id: st.id, estacion_nombre: st.nombre });
   }
   if (window.GALERIAS) {
     document.addEventListener('click', function (e) {
@@ -440,6 +449,7 @@
     nb.addEventListener('click', function () {
       locate(ctx, function (pos) {
         state.pos = pos; nb.setAttribute('aria-pressed', 'true');
+        track('buscar_cercana', { estacion_id: nearest(pos)[0].st.id });
         nb.innerHTML = icon('locate') + 'Ordenadas por cercanía';
         render();
         listEl.scrollIntoView({ behavior: 'smooth' });
@@ -490,6 +500,7 @@
       e.preventDefault();
       var data = new FormData(form);
       var ok = $('.form-ok', form);
+      track('enviar_formulario', { motivo: data.get('motivo') || 'Consulta' });
       if (form.dataset.endpoint) {
         fetch(form.dataset.endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
           .then(function (r) { if (!r.ok) throw r; ok.textContent = '¡Gracias! Recibimos tu mensaje y te responderemos a la brevedad.'; ok.classList.add('is-visible'); form.reset(); })
@@ -505,5 +516,19 @@
       ok.textContent = 'Se abrió tu aplicación de correo con el mensaje listo para enviar.';
       ok.classList.add('is-visible');
     });
+  });
+
+  /* Clics de contacto: teléfono, WhatsApp, e-mail y cómo llegar. */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    var holder = a.closest('[data-id]');
+    var stId = holder ? holder.dataset.id : (sheet && sheet.open && sheetState.st ? sheetState.st.id : null);
+    var params = { estacion_id: stId, ubicacion: location.pathname.split('/').pop() || 'index.html' };
+    if (href.indexOf('tel:') === 0) { params.telefono = href.slice(4); track('click_telefono', params); }
+    else if (href.indexOf('wa.me') >= 0) track('click_whatsapp', params);
+    else if (href.indexOf('mailto:') === 0) { params.email = href.slice(7).split('?')[0]; track('click_email', params); }
+    else if (href.indexOf('google.com/maps/dir') >= 0) track('click_como_llegar', params);
   });
 })();
